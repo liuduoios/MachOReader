@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		864537F128C73BDF00C8E114 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 864537F028C73BDF00C8E114 /* main.cpp */; };
 		868033B828C737650076298B /* MachOReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 868033B628C737650076298B /* MachOReader.cpp */; };
+		86D5381828D1AD3000A95CAE /* LoadCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 86D5381628D1AD3000A95CAE /* LoadCommand.cpp */; };
+		86D5381B28D1AD8B00A95CAE /* LoadCommandHeader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 86D5381928D1AD8B00A95CAE /* LoadCommandHeader.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -28,6 +30,12 @@
 		868033AC28C737230076298B /* MachOReader */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = MachOReader; sourceTree = BUILT_PRODUCTS_DIR; };
 		868033B628C737650076298B /* MachOReader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = MachOReader.cpp; sourceTree = "<group>"; };
 		868033B728C737650076298B /* MachOReader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MachOReader.h; sourceTree = "<group>"; };
+		86D5381528D1A52500A95CAE /* loader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = loader.h; sourceTree = "<group>"; };
+		86D5381628D1AD3000A95CAE /* LoadCommand.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LoadCommand.cpp; sourceTree = "<group>"; };
+		86D5381728D1AD3000A95CAE /* LoadCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LoadCommand.h; sourceTree = "<group>"; };
+		86D5381928D1AD8B00A95CAE /* LoadCommandHeader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LoadCommandHeader.cpp; sourceTree = "<group>"; };
+		86D5381A28D1AD8B00A95CAE /* LoadCommandHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LoadCommandHeader.h; sourceTree = "<group>"; };
+		86D5382F28D1BAC000A95CAE /* nlist.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = nlist.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,11 +68,25 @@
 		868033AE28C737230076298B /* MachOReader */ = {
 			isa = PBXGroup;
 			children = (
+				86D5381428D1A51800A95CAE /* mach */,
 				868033B628C737650076298B /* MachOReader.cpp */,
 				868033B728C737650076298B /* MachOReader.h */,
+				86D5381628D1AD3000A95CAE /* LoadCommand.cpp */,
+				86D5381728D1AD3000A95CAE /* LoadCommand.h */,
+				86D5381928D1AD8B00A95CAE /* LoadCommandHeader.cpp */,
+				86D5381A28D1AD8B00A95CAE /* LoadCommandHeader.h */,
 				864537F028C73BDF00C8E114 /* main.cpp */,
 			);
 			path = MachOReader;
+			sourceTree = "<group>";
+		};
+		86D5381428D1A51800A95CAE /* mach */ = {
+			isa = PBXGroup;
+			children = (
+				86D5381528D1A52500A95CAE /* loader.h */,
+				86D5382F28D1BAC000A95CAE /* nlist.h */,
+			);
+			path = mach;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -125,6 +147,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				864537F128C73BDF00C8E114 /* main.cpp in Sources */,
+				86D5381828D1AD3000A95CAE /* LoadCommand.cpp in Sources */,
+				86D5381B28D1AD8B00A95CAE /* LoadCommandHeader.cpp in Sources */,
 				868033B828C737650076298B /* MachOReader.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

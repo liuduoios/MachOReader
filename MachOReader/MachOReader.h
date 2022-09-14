@@ -9,7 +9,7 @@
 
 #include <string>
 #include <fstream>
-#include <mach-o/loader.h>
+#include "loader.h"
 
 namespace MachOReader {
 
