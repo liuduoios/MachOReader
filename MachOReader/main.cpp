@@ -6,11 +6,17 @@
 //
 
 #include "MachOReader.h"
-#include <iostream>
 
 int main(int argc, char *argv[]) {
+    const char *path;
     
-    MachOReader::MachOReader reader(argv[0]);
+    if (argc == 1) {
+        path = argv[0];
+    } else {
+        path = argv[1];
+    }
+    
+    MachOReader::MachOReader reader(path);
     
     return 0;
 }

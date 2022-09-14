@@ -7,10 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		26E9C6D028D20ACB00E04CE8 /* SymbolTable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 26E9C6CE28D20ACB00E04CE8 /* SymbolTable.cpp */; };
 		864537F128C73BDF00C8E114 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 864537F028C73BDF00C8E114 /* main.cpp */; };
 		868033B828C737650076298B /* MachOReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 868033B628C737650076298B /* MachOReader.cpp */; };
-		86D5381828D1AD3000A95CAE /* LoadCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 86D5381628D1AD3000A95CAE /* LoadCommand.cpp */; };
-		86D5381B28D1AD8B00A95CAE /* LoadCommandHeader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 86D5381928D1AD8B00A95CAE /* LoadCommandHeader.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -26,15 +25,14 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		26E9C6CB28D2046E00E04CE8 /* stab.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = stab.h; sourceTree = "<group>"; };
+		26E9C6CE28D20ACB00E04CE8 /* SymbolTable.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SymbolTable.cpp; sourceTree = "<group>"; };
+		26E9C6CF28D20ACB00E04CE8 /* SymbolTable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SymbolTable.h; sourceTree = "<group>"; };
 		864537F028C73BDF00C8E114 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		868033AC28C737230076298B /* MachOReader */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = MachOReader; sourceTree = BUILT_PRODUCTS_DIR; };
 		868033B628C737650076298B /* MachOReader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = MachOReader.cpp; sourceTree = "<group>"; };
 		868033B728C737650076298B /* MachOReader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MachOReader.h; sourceTree = "<group>"; };
 		86D5381528D1A52500A95CAE /* loader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = loader.h; sourceTree = "<group>"; };
-		86D5381628D1AD3000A95CAE /* LoadCommand.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LoadCommand.cpp; sourceTree = "<group>"; };
-		86D5381728D1AD3000A95CAE /* LoadCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LoadCommand.h; sourceTree = "<group>"; };
-		86D5381928D1AD8B00A95CAE /* LoadCommandHeader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LoadCommandHeader.cpp; sourceTree = "<group>"; };
-		86D5381A28D1AD8B00A95CAE /* LoadCommandHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LoadCommandHeader.h; sourceTree = "<group>"; };
 		86D5382F28D1BAC000A95CAE /* nlist.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = nlist.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -71,10 +69,8 @@
 				86D5381428D1A51800A95CAE /* mach */,
 				868033B628C737650076298B /* MachOReader.cpp */,
 				868033B728C737650076298B /* MachOReader.h */,
-				86D5381628D1AD3000A95CAE /* LoadCommand.cpp */,
-				86D5381728D1AD3000A95CAE /* LoadCommand.h */,
-				86D5381928D1AD8B00A95CAE /* LoadCommandHeader.cpp */,
-				86D5381A28D1AD8B00A95CAE /* LoadCommandHeader.h */,
+				26E9C6CE28D20ACB00E04CE8 /* SymbolTable.cpp */,
+				26E9C6CF28D20ACB00E04CE8 /* SymbolTable.h */,
 				864537F028C73BDF00C8E114 /* main.cpp */,
 			);
 			path = MachOReader;
@@ -85,6 +81,7 @@
 			children = (
 				86D5381528D1A52500A95CAE /* loader.h */,
 				86D5382F28D1BAC000A95CAE /* nlist.h */,
+				26E9C6CB28D2046E00E04CE8 /* stab.h */,
 			);
 			path = mach;
 			sourceTree = "<group>";
@@ -147,9 +144,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				864537F128C73BDF00C8E114 /* main.cpp in Sources */,
-				86D5381828D1AD3000A95CAE /* LoadCommand.cpp in Sources */,
-				86D5381B28D1AD8B00A95CAE /* LoadCommandHeader.cpp in Sources */,
 				868033B828C737650076298B /* MachOReader.cpp in Sources */,
+				26E9C6D028D20ACB00E04CE8 /* SymbolTable.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

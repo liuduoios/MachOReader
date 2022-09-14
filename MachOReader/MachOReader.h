@@ -10,6 +10,7 @@
 #include <string>
 #include <fstream>
 #include "loader.h"
+#include "SymbolTable.h"
 
 namespace MachOReader {
 
@@ -25,8 +26,11 @@ public:
 private:
     void handle64Arch();
     void printCPUType(struct mach_header_64 header);
+    void printLoadCommandList();
 private:
     std::ifstream infile;
+    struct mach_header_64 header;
+    SymbolTable *symbolTable;
 };
 
 } // namespace MachOReader

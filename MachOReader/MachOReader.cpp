@@ -7,7 +7,6 @@
 
 #include "MachOReader.h"
 #include <mach-o/fat.h>
-#include "LoadCommand.h"
 #include "nlist.h"
 #include <iostream>
 
@@ -36,8 +35,8 @@ MachOReader::MachOReader(std::string filePath): filePath(filePath) {
 }
 
 MachOReader::~MachOReader() {
-    infile.close();
-    printf("文件已关闭\n");
+    delete symbolTable;
+    
 }
 
 void MachOReader::handle64Arch() {
@@ -45,12 +44,72 @@ void MachOReader::handle64Arch() {
     
     struct mach_header_64 header;
     infile.read(reinterpret_cast<char *>(&header), sizeof(struct mach_header_64));
+    this->header = header;
+    
     printCPUType(header);
     
     // 打印文件类型
     printFileType(header);
     
-    printf("共有 %d 个加载命令\n", header.ncmds);
+    printLoadCommandList();
+    
+    infile.close();
+    printf("文件已关闭\n");
+    
+    symbolTable->printAllSymbols();
+}
+
+void MachOReader::printCPUType(struct mach_header_64 header) {
+    switch (header.cputype) {
+        case CPU_TYPE_ARM:
+            printf("cputype: ARM\n");
+            break;
+        case CPU_TYPE_ARM64:
+            printf("cputype: ARM64\n");
+            break;
+        case CPU_TYPE_X86:
+            printf("cputype: X86\n");
+            break;
+        default:
+            printf("cputype: %d\n", header.cputype);
+            break;
+    }
+}
+
+void printFileType(struct mach_header_64 header) {
+    switch (header.filetype) {
+        case MH_OBJECT:
+            printf("文件类型：目标文件\n");
+            break;
+        case MH_EXECUTE:
+            printf("文件类型：可执行文件\n");
+            break;
+        default:
+            printf("文件类型：未处理的文件类型\n");
+            break;
+    }
+}
+
+void printLoadCommandType(struct load_command lc) {
+    switch (lc.cmd) {
+        case LC_SEGMENT:
+            printf("加载命令类型：segment\n");
+            break;
+        case LC_SYMTAB:
+            printf("加载命令类型：符号表\n");
+            break;
+        case LC_SEGMENT_64:
+            printf("加载命令类型：segment_64\n");
+            break;
+        default:
+            printf("加载命令类型：其它未处理类型\n");
+            break;
+    }
+}
+
+void MachOReader::printLoadCommandList() {
+    std::cout << "\n-----------------------";
+    printf("\n共有 %d 个加载命令\n", header.ncmds);
     
 //    std::streampos loadCommandPos = infile.tellg();
     
@@ -59,7 +118,6 @@ void MachOReader::handle64Arch() {
         std::streampos pos = infile.tellg();
         struct load_command lc;
         infile.read(reinterpret_cast<char *>(&lc), sizeof(struct load_command));
-        LoadCommand loadCommand = LoadCommand(lc.cmd, lc.cmdsize);
         infile.seekg(pos);
         
         // 根据 load_command 的类型来读取成对应的结构体
@@ -95,34 +153,9 @@ void MachOReader::handle64Arch() {
 //                uint32_t    strsize;    /* 字符串表的大小（字节） */
 //            };
             printf("\t符号表地址偏移量：%x\n", command.symoff);
+            printf("\t字符串表地址偏移量：%x\n", command.stroff);
             
-            // 保存文件指针位置
-            std::streampos pos = infile.tellg();
-            // 找到字符串表的位置
-            infile.seekg(command.stroff, std::ios_base::beg);
-            std::streampos stringTablePos = infile.tellg(); // 保存字符串表的起始位置
-            for (int i = 0; i < command.strsize; ++i) {
-                
-            }
-            
-            // 找到符号表的地址
-            infile.seekg(command.symoff, std::ios_base::beg);
-            std::cout << "当前文件指针位置：" << infile.tellg() << std::endl;
-            struct nlist_64 *nlists = (struct nlist_64 *)malloc(sizeof(struct nlist_64) * command.nsyms);
-            for (int i = 0; i < command.nsyms; ++i) {
-                struct nlist_64 nlist;
-                infile.read(reinterpret_cast<char *>(&nlist), sizeof(struct nlist_64));
-                printf("找到 nlist 对象：%lu\n", nlist.n_un.n_strx);
-                nlists[i] = nlist;
-                
-                std::streampos pos = infile.tellg();
-                infile.seekg(stringTablePos);
-                infile.seekg(nlist.n_un.n_strx, std::ios_base::cur);
-                infile.seekg(pos);
-            }
-            free(nlists);
-            // 还原文件指针位置
-            infile.seekg(pos);
+            symbolTable = new SymbolTable(command, filePath);
         } else if (lc.cmd == LC_DYSYMTAB) {
             struct dysymtab_command stc;
             infile.read(reinterpret_cast<char *>(&stc), lc.cmdsize);
@@ -182,54 +215,6 @@ void MachOReader::handle64Arch() {
             infile.read(reinterpret_cast<char *>(&command), 16);
             printf("lc.cmd = %x\n", lc.cmd);
         }
-    }
-}
-
-void MachOReader::printCPUType(struct mach_header_64 header) {
-    switch (header.cputype) {
-        case CPU_TYPE_ARM:
-            printf("cputype: ARM\n");
-            break;
-        case CPU_TYPE_ARM64:
-            printf("cputype: ARM64\n");
-            break;
-        case CPU_TYPE_X86:
-            printf("cputype: X86\n");
-            break;
-        default:
-            printf("cputype: %d\n", header.cputype);
-            break;
-    }
-}
-
-void printFileType(struct mach_header_64 header) {
-    switch (header.filetype) {
-        case MH_OBJECT:
-            printf("文件类型：目标文件\n");
-            break;
-        case MH_EXECUTE:
-            printf("文件类型：可执行文件\n");
-            break;
-        default:
-            printf("文件类型：未处理的文件类型\n");
-            break;
-    }
-}
-
-void printLoadCommandType(struct load_command lc) {
-    switch (lc.cmd) {
-        case LC_SEGMENT:
-            printf("加载命令类型：segment\n");
-            break;
-        case LC_SYMTAB:
-            printf("加载命令类型：符号表\n");
-            break;
-        case LC_SEGMENT_64:
-            printf("加载命令类型：segment_64\n");
-            break;
-        default:
-            printf("加载命令类型：其它未处理类型\n");
-            break;
     }
 }
 

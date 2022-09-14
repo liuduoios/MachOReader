@@ -88,6 +88,7 @@ struct nlist {
 
 /*
  * This is the symbol table entry structure for 64-bit architectures.
+ * 符号表的 entry 结构（64位）
  */
 struct nlist_64 {
     union {
