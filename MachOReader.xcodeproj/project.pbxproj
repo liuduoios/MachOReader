@@ -32,6 +32,7 @@
 		868033AC28C737230076298B /* MachOReader */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = MachOReader; sourceTree = BUILT_PRODUCTS_DIR; };
 		868033B628C737650076298B /* MachOReader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = MachOReader.cpp; sourceTree = "<group>"; };
 		868033B728C737650076298B /* MachOReader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MachOReader.h; sourceTree = "<group>"; };
+		86D0A02828D2EBA500938BBC /* LoadCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LoadCommand.h; sourceTree = "<group>"; };
 		86D5381528D1A52500A95CAE /* loader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = loader.h; sourceTree = "<group>"; };
 		86D5382F28D1BAC000A95CAE /* nlist.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = nlist.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -71,6 +72,7 @@
 				868033B728C737650076298B /* MachOReader.h */,
 				26E9C6CE28D20ACB00E04CE8 /* SymbolTable.cpp */,
 				26E9C6CF28D20ACB00E04CE8 /* SymbolTable.h */,
+				86D0A02828D2EBA500938BBC /* LoadCommand.h */,
 				864537F028C73BDF00C8E114 /* main.cpp */,
 			);
 			path = MachOReader;

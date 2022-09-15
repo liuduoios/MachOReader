@@ -30,7 +30,7 @@ private:
 private:
     std::ifstream infile;
     struct mach_header_64 header;
-    SymbolTable *symbolTable;
+    SymbolTable *symbolTable = nullptr;
 };
 
 } // namespace MachOReader
