@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		26E9C6D028D20ACB00E04CE8 /* SymbolTable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 26E9C6CE28D20ACB00E04CE8 /* SymbolTable.cpp */; };
+		26E9C6D628D5892300E04CE8 /* SwapEndian.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 26E9C6D528D5892300E04CE8 /* SwapEndian.cpp */; };
 		864537F128C73BDF00C8E114 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 864537F028C73BDF00C8E114 /* main.cpp */; };
 		868033B828C737650076298B /* MachOReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 868033B628C737650076298B /* MachOReader.cpp */; };
 /* End PBXBuildFile section */
@@ -31,6 +32,8 @@
 		26E9C6D128D569F700E04CE8 /* CPUType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CPUType.h; sourceTree = "<group>"; };
 		26E9C6D228D56B1600E04CE8 /* CPUSubtype.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CPUSubtype.h; sourceTree = "<group>"; };
 		26E9C6D328D5706500E04CE8 /* FileType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileType.h; sourceTree = "<group>"; };
+		26E9C6D428D5892200E04CE8 /* SwapEndian.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SwapEndian.h; sourceTree = "<group>"; };
+		26E9C6D528D5892300E04CE8 /* SwapEndian.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SwapEndian.cpp; sourceTree = "<group>"; };
 		864537F028C73BDF00C8E114 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		868033AC28C737230076298B /* MachOReader */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = MachOReader; sourceTree = BUILT_PRODUCTS_DIR; };
 		868033B628C737650076298B /* MachOReader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = MachOReader.cpp; sourceTree = "<group>"; };
@@ -79,6 +82,8 @@
 				26E9C6D128D569F700E04CE8 /* CPUType.h */,
 				26E9C6D228D56B1600E04CE8 /* CPUSubtype.h */,
 				26E9C6D328D5706500E04CE8 /* FileType.h */,
+				26E9C6D428D5892200E04CE8 /* SwapEndian.h */,
+				26E9C6D528D5892300E04CE8 /* SwapEndian.cpp */,
 				864537F028C73BDF00C8E114 /* main.cpp */,
 			);
 			path = MachOReader;
@@ -154,6 +159,7 @@
 				864537F128C73BDF00C8E114 /* main.cpp in Sources */,
 				868033B828C737650076298B /* MachOReader.cpp in Sources */,
 				26E9C6D028D20ACB00E04CE8 /* SymbolTable.cpp in Sources */,
+				26E9C6D628D5892300E04CE8 /* SwapEndian.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -13,6 +13,7 @@
 #include "CPUType.h"
 #include "CPUSubtype.h"
 #include "FileType.h"
+#include "SwapEndian.h"
 
 namespace MachOReader {
 
@@ -58,9 +59,12 @@ void MachOReader::handleFatArch() {
         for (int i = 0; i < header.nfat_arch; ++i) {
             struct fat_arch arch;
             infile.read(reinterpret_cast<char *>(&arch), sizeof(struct fat_arch));
-            CPUType cpuType = CPUType(arch.cputype);
+            if (header.magic == FAT_CIGAM) {
+                swapFatArch(&arch);
+            }
             
             std::streampos pos = infile.tellg();
+            CPUType cpuType = CPUType(arch.cputype);
             if (is64Arch(cpuType)) {
                 handle64Arch((uint32_t)arch.offset);
             } else {
@@ -72,6 +76,9 @@ void MachOReader::handleFatArch() {
         for (int i = 0; i < header.nfat_arch; ++i) {
             struct fat_arch_64 arch;
             infile.read(reinterpret_cast<char *>(&arch), sizeof(struct fat_arch_64));
+            if (header.magic == FAT_CIGAM_64) {
+                swapFatArch64(&arch);
+            }
             
             std::streampos pos = infile.tellg();
             handle64Arch((uint32_t)arch.offset);
