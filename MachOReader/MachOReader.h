@@ -24,8 +24,14 @@ public:
     MachOReader(std::string filePath);
     ~MachOReader();
 private:
+    void handleFatArch();
+    
+    void handle32Arch();
+    void printHeaderInfo(struct mach_header header);
+    
     void handle64Arch();
-    void printCPUType(struct mach_header_64 header);
+    void printHeaderInfo(struct mach_header_64 header);
+    
     void printLoadCommandList();
 private:
     std::ifstream infile;

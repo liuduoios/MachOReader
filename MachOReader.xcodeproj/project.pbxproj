@@ -28,6 +28,9 @@
 		26E9C6CB28D2046E00E04CE8 /* stab.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = stab.h; sourceTree = "<group>"; };
 		26E9C6CE28D20ACB00E04CE8 /* SymbolTable.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SymbolTable.cpp; sourceTree = "<group>"; };
 		26E9C6CF28D20ACB00E04CE8 /* SymbolTable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SymbolTable.h; sourceTree = "<group>"; };
+		26E9C6D128D569F700E04CE8 /* CPUType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CPUType.h; sourceTree = "<group>"; };
+		26E9C6D228D56B1600E04CE8 /* CPUSubtype.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CPUSubtype.h; sourceTree = "<group>"; };
+		26E9C6D328D5706500E04CE8 /* FileType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileType.h; sourceTree = "<group>"; };
 		864537F028C73BDF00C8E114 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		868033AC28C737230076298B /* MachOReader */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = MachOReader; sourceTree = BUILT_PRODUCTS_DIR; };
 		868033B628C737650076298B /* MachOReader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = MachOReader.cpp; sourceTree = "<group>"; };
@@ -73,6 +76,9 @@
 				26E9C6CE28D20ACB00E04CE8 /* SymbolTable.cpp */,
 				26E9C6CF28D20ACB00E04CE8 /* SymbolTable.h */,
 				86D0A02828D2EBA500938BBC /* LoadCommand.h */,
+				26E9C6D128D569F700E04CE8 /* CPUType.h */,
+				26E9C6D228D56B1600E04CE8 /* CPUSubtype.h */,
+				26E9C6D328D5706500E04CE8 /* FileType.h */,
 				864537F028C73BDF00C8E114 /* main.cpp */,
 			);
 			path = MachOReader;

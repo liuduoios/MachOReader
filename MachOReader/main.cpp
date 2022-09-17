@@ -16,6 +16,10 @@ int main(int argc, char *argv[]) {
         path = argv[1];
     }
     
+//    path = "/Users/hj/Desktop/FishhookUse_device";
+//    path = "/Users/hj/Desktop/FishhookUse_simulator";
+    path = "/Users/hj/Desktop/FishhookUse_fat";
+    
     MachOReader::MachOReader reader(path);
     
     return 0;

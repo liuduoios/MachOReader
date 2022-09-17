@@ -10,6 +10,9 @@
 #include "nlist.h"
 #include <iostream>
 #include "LoadCommand.h"
+#include "CPUType.h"
+#include "CPUSubtype.h"
+#include "FileType.h"
 
 namespace MachOReader {
 
@@ -27,6 +30,7 @@ MachOReader::MachOReader(std::string filePath): filePath(filePath) {
         printf("胖二进制\n");
     } else if (magic == MH_MAGIC || magic == MH_CIGAM) {
         printf("32位架构\n");
+        handle32Arch();
     } else if (magic == MH_MAGIC_64 || magic == MH_CIGAM_64) {
         printf("64位架构\n");
         handle64Arch();
@@ -41,6 +45,24 @@ MachOReader::~MachOReader() {
     }
 }
 
+void MachOReader::handleFatArch() {
+    
+}
+
+void MachOReader::handle32Arch() {
+    infile.seekg(0);
+    
+    struct mach_header header;
+    infile.read(reinterpret_cast<char *>(&header), sizeof(struct mach_header));
+//    this->header
+    
+    printHeaderInfo(header);
+}
+
+void MachOReader::printHeaderInfo(struct mach_header header) {
+    
+}
+
 void MachOReader::handle64Arch() {
     infile.seekg(0);
     
@@ -48,10 +70,7 @@ void MachOReader::handle64Arch() {
     infile.read(reinterpret_cast<char *>(&header), sizeof(struct mach_header_64));
     this->header = header;
     
-    printCPUType(header);
-    
-    // 打印文件类型
-    printFileType(header);
+    printHeaderInfo(header);
     
     printLoadCommandList();
     
@@ -63,21 +82,25 @@ void MachOReader::handle64Arch() {
     }
 }
 
-void MachOReader::printCPUType(struct mach_header_64 header) {
-    switch (header.cputype) {
-        case CPU_TYPE_ARM:
-            printf("cputype: ARM\n");
+void MachOReader::printHeaderInfo(struct mach_header_64 header) {
+    // cputype
+    CPUType cpuType = CPUType(header.cputype);
+    std::cout << "cputype: " << stringOfCPUType(cpuType) << std::endl;
+    
+    // cpusubtype
+    switch (cpuType) {
+        case X86_64: {
+            X86CPUSubtype subtype = X86CPUSubtype(header.cpusubtype);
+            std::cout << "cpusubtype: " << stringOfX86CPUSubtype(subtype) << std::endl;
             break;
-        case CPU_TYPE_ARM64:
-            printf("cputype: ARM64\n");
-            break;
-        case CPU_TYPE_X86:
-            printf("cputype: X86\n");
-            break;
+        }
         default:
-            printf("cputype: %d\n", header.cputype);
             break;
     }
+    
+    // filetype
+    FileType fileType = FileType(header.filetype);
+    std::cout << "filetype: " << stringOfFileType(fileType) << std::endl;
 }
 
 void printFileType(struct mach_header_64 header) {
