@@ -9,6 +9,7 @@
 #include <mach-o/fat.h>
 #include "nlist.h"
 #include <iostream>
+#include "Architecture.h"
 #include "LoadCommand.h"
 #include "CPUType.h"
 #include "CPUSubtype.h"
@@ -28,18 +29,15 @@ MachOReader::MachOReader(std::string filePath): filePath(filePath) {
     uint32_t magic;
     infile.read(reinterpret_cast<char *>(&magic), sizeof(magic));
     printf("magic: %x\n", magic);
-    if (magic == FAT_MAGIC || magic == FAT_CIGAM
-        || magic == FAT_MAGIC_64 || magic == FAT_CIGAM_64) {
-        printf("胖二进制\n");
+    Architecture architecture = Architecture(magic);
+    std::cout << stringOfArchitecture(architecture) << std::endl;
+    
+    if (isFatArch(architecture)) {
         handleFatArch();
-    } else if (magic == MH_MAGIC || magic == MH_CIGAM) {
-        printf("32位架构\n");
-        handle32Arch(0);
-    } else if (magic == MH_MAGIC_64 || magic == MH_CIGAM_64) {
-        printf("64位架构\n");
+    } else if (is64Arch(architecture)) {
         handle64Arch(0);
     } else {
-        printf("未知架构\n");
+        handle32Arch(0);
     }
 }
 

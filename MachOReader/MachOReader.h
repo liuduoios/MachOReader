@@ -16,11 +16,10 @@ namespace MachOReader {
 
 class MachOReader {
     std::string filePath;
-public:
     std::string architecture;
     std::string cputype;
     std::string cpusubtype;
-    
+public:
     MachOReader(std::string filePath);
     ~MachOReader();
 private:

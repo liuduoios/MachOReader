@@ -2,7 +2,7 @@
 //  SwapEndian.c
 //  MachOReader
 //
-//  Created by hj on 2022/9/17.
+//  Created by liuduo on 2022/9/17.
 //
 
 #include "SwapEndian.h"
