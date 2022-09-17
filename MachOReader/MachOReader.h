@@ -26,10 +26,10 @@ public:
 private:
     void handleFatArch();
     
-    void handle32Arch();
+    void handle32Arch(uint32_t offset);
     void printHeaderInfo(struct mach_header header);
     
-    void handle64Arch();
+    void handle64Arch(uint32_t offset);
     void printHeaderInfo(struct mach_header_64 header);
     
     void printLoadCommandList();

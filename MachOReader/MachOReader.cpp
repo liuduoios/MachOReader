@@ -23,17 +23,20 @@ MachOReader::MachOReader(std::string filePath): filePath(filePath) {
     printf("%s\n", filePath.c_str());
     infile.open(filePath);
     
+    // 读取 magic
     uint32_t magic;
     infile.read(reinterpret_cast<char *>(&magic), sizeof(magic));
     printf("magic: %x\n", magic);
-    if (magic == FAT_MAGIC || magic == FAT_CIGAM) {
+    if (magic == FAT_MAGIC || magic == FAT_CIGAM
+        || magic == FAT_MAGIC_64 || magic == FAT_CIGAM_64) {
         printf("胖二进制\n");
+        handleFatArch();
     } else if (magic == MH_MAGIC || magic == MH_CIGAM) {
         printf("32位架构\n");
-        handle32Arch();
+        handle32Arch(0);
     } else if (magic == MH_MAGIC_64 || magic == MH_CIGAM_64) {
         printf("64位架构\n");
-        handle64Arch();
+        handle64Arch(0);
     } else {
         printf("未知架构\n");
     }
@@ -46,11 +49,39 @@ MachOReader::~MachOReader() {
 }
 
 void MachOReader::handleFatArch() {
+    infile.seekg(0);
     
+    struct fat_header header;
+    infile.read(reinterpret_cast<char *>(&header), sizeof(struct fat_header));
+    
+    if (header.magic == FAT_MAGIC || header.magic == FAT_CIGAM) {
+        for (int i = 0; i < header.nfat_arch; ++i) {
+            struct fat_arch arch;
+            infile.read(reinterpret_cast<char *>(&arch), sizeof(struct fat_arch));
+            CPUType cpuType = CPUType(arch.cputype);
+            
+            std::streampos pos = infile.tellg();
+            if (is64Arch(cpuType)) {
+                handle64Arch((uint32_t)arch.offset);
+            } else {
+                handle32Arch((uint32_t)arch.offset);
+            }
+            infile.seekg(pos);
+        }
+    } else if (header.magic == FAT_MAGIC_64 || header.magic == FAT_CIGAM_64) {
+        for (int i = 0; i < header.nfat_arch; ++i) {
+            struct fat_arch_64 arch;
+            infile.read(reinterpret_cast<char *>(&arch), sizeof(struct fat_arch_64));
+            
+            std::streampos pos = infile.tellg();
+            handle64Arch((uint32_t)arch.offset);
+            infile.seekg(pos);
+        }
+    }
 }
 
-void MachOReader::handle32Arch() {
-    infile.seekg(0);
+void MachOReader::handle32Arch(uint32_t offset) {
+    infile.seekg(offset);
     
     struct mach_header header;
     infile.read(reinterpret_cast<char *>(&header), sizeof(struct mach_header));
@@ -63,8 +94,8 @@ void MachOReader::printHeaderInfo(struct mach_header header) {
     
 }
 
-void MachOReader::handle64Arch() {
-    infile.seekg(0);
+void MachOReader::handle64Arch(uint32_t offset) {
+    infile.seekg(offset);
     
     struct mach_header_64 header;
     infile.read(reinterpret_cast<char *>(&header), sizeof(struct mach_header_64));

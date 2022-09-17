@@ -60,3 +60,13 @@ std::string stringOfCPUType(CPUType cpuType) {
             return "POWERPC64";
     }
 }
+
+bool is64Arch(CPUType cpuType) {
+    switch (cpuType) {
+        case X86_64:
+        case ARM64:
+            return true;
+        default:
+            return false;
+    }
+}
