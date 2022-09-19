@@ -45,8 +45,8 @@ std::string stringOfArchitecture(Architecture architecture) {
 
 bool isFatArch(Architecture architecture) {
     switch (architecture) {
-        case FAT_LITTER_ENDIAN:
-        case FAT_LITTER_ENDIAN_64:
+        case FAT_LITTLE_ENDIAN:
+        case FAT_LITTLE_ENDIAN_64:
         case FAT_BIG_ENDIAN:
         case FAT_BIG_ENDIAN_64:
             return true;
@@ -57,7 +57,7 @@ bool isFatArch(Architecture architecture) {
 
 bool is64Arch(Architecture architecture) {
     switch (architecture) {
-        case FAT_LITTER_ENDIAN_64:
+        case FAT_LITTLE_ENDIAN_64:
         case FAT_BIG_ENDIAN_64:
         case LITTER_ENDIAN_64:
         case ARCH_BIG_ENDIAN_64:

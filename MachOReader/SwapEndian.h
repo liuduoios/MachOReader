@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <mach-o/fat.h>
 
+void swapFatHeader(struct fat_header *header);
 void swapFatArch(struct fat_arch *arch);
 void swapFatArch64(struct fat_arch_64 *arch);
 

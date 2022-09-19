@@ -8,6 +8,11 @@
 #include "SwapEndian.h"
 #include <architecture/byte_order.h>
 
+void swapFatHeader(struct fat_header *header) {
+//    header->magic = NXSwapInt(header->magic);
+    header->nfat_arch = NXSwapInt(header->nfat_arch);
+}
+
 void swapFatArch(struct fat_arch *arch) {
     arch->cputype = NXSwapInt(arch->cputype);
     arch->cpusubtype = NXSwapInt(arch->cpusubtype);

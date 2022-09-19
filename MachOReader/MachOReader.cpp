@@ -54,6 +54,10 @@ void MachOReader::handleFatArch() {
     infile.read(reinterpret_cast<char *>(&header), sizeof(struct fat_header));
     
     if (header.magic == FAT_MAGIC || header.magic == FAT_CIGAM) {
+        if (header.magic == FAT_CIGAM) {
+            swapFatHeader(&header);
+        }
+        
         for (int i = 0; i < header.nfat_arch; ++i) {
             struct fat_arch arch;
             infile.read(reinterpret_cast<char *>(&arch), sizeof(struct fat_arch));
@@ -109,9 +113,6 @@ void MachOReader::handle64Arch(uint32_t offset) {
     printHeaderInfo(header);
     
     printLoadCommandList();
-    
-    infile.close();
-    printf("文件已关闭\n");
     
     if (symbolTable) {
         symbolTable->printAllSymbols();
@@ -195,13 +196,16 @@ void MachOReader::printLoadCommandList() {
         switch (lc.cmd) {
             case LC_SEGMENT: {
                 struct segment_command command;
-                infile.read(reinterpret_cast<char *>(&command), lc.cmdsize);
+                infile.read(reinterpret_cast<char *>(&command), sizeof(struct segment_command));
                 break;
             }
             case LC_SEGMENT_64: { // segment 是一种段结构，里面可能包含多个 section
+                std::streampos pos = infile.tellg();
                 struct segment_command_64 command;
                 infile.read(reinterpret_cast<char *>(&command), sizeof(struct segment_command_64));
                 printf("segment_command_64.segname = %s\n", command.segname);
+                infile.seekg(pos);
+                infile.seekg(lc.cmdsize, std::ios_base::cur);
                 
                 // 如果存在 section，则需要读取 section
                 for (int j = 0; j < command.nsects; ++j) {
@@ -219,43 +223,59 @@ void MachOReader::printLoadCommandList() {
             case LC_LINKER_OPTIMIZATION_HINT:
             case LC_DYLD_EXPORTS_TRIE:
             case LC_DYLD_CHAINED_FIXUPS: {
+                std::streampos pos = infile.tellg();
                 struct linkedit_data_command command;
                 infile.read(reinterpret_cast<char *>(&command), sizeof(struct linkedit_data_command));
                 printf("linkedit_data_command\n");
+                infile.seekg(pos);
+                infile.seekg(command.cmdsize, std::ios_base::cur);
                 break;
             }
             case LC_ID_DYLINKER:
             case LC_LOAD_DYLINKER:
             case LC_DYLD_ENVIRONMENT: {
-                struct dylinker_command stc;
+                std::streampos pos = infile.tellg();
+                struct dylinker_command command;
     //            printf("%lu", sizeof(struct dylinker_command));
-                infile.read(reinterpret_cast<char *>(&stc), 16); // sizeof(struct dylinker_command) == 12
+                infile.read(reinterpret_cast<char *>(&command), sizeof(struct dylinker_command)); // sizeof(struct dylinker_command) == 12
                 printf("LC_LOAD_DYLINKER\n");
+                infile.seekg(pos);
+                infile.seekg(command.cmdsize, std::ios_base::cur);
                 break;
             }
             case LC_ID_DYLIB:
             case LC_LOAD_DYLIB:
             case LC_LOAD_WEAK_DYLIB:
             case LC_REEXPORT_DYLIB: {
+                std::streampos pos = infile.tellg();
                 struct dylib_command command;
                 infile.read(reinterpret_cast<char *>(&command), sizeof(struct dylib_command));
                 printf("LC_LOAD_DYLIB\n");
+                infile.seekg(pos);
+                infile.seekg(command.cmdsize, std::ios_base::cur);
                 break;
             }
             case LC_MAIN: {
+                std::streampos pos = infile.tellg();
                 struct entry_point_command command;
                 infile.read(reinterpret_cast<char *>(&command), sizeof(struct entry_point_command));
                 printf("LC_MAIN\n");
+                infile.seekg(pos);
+                infile.seekg(command.cmdsize, std::ios_base::cur);
                 break;
             }
             case LC_DYLD_INFO:
             case LC_DYLD_INFO_ONLY: {
+                std::streampos pos = infile.tellg();
                 struct dyld_info_command dic;
                 infile.read(reinterpret_cast<char *>(&dic), lc.cmdsize);
                 printf("LC_DYLD_INFO_ONLY\n");
+                infile.seekg(pos);
+                infile.seekg(lc.cmdsize, std::ios_base::cur);
                 break;
             }
             case LC_SYMTAB: {
+                std::streampos pos = infile.tellg();
                 struct symtab_command command;
                 infile.read(reinterpret_cast<char *>(&command), lc.cmdsize);
                 
@@ -263,32 +283,47 @@ void MachOReader::printLoadCommandList() {
                 printf("\t符号表地址偏移量：%x\n", command.symoff);
                 printf("\t字符串表地址偏移量：%x\n", command.stroff);
                 
+                infile.seekg(pos);
+                infile.seekg(command.cmdsize, std::ios_base::cur);
+                
                 symbolTable = new SymbolTable(command, filePath);
                 break;
             }
             case LC_DYSYMTAB: {
+                std::streampos pos = infile.tellg();
                 struct dysymtab_command stc;
                 infile.read(reinterpret_cast<char *>(&stc), lc.cmdsize);
                 printf("LC_DYSYMTAB\n");
+                infile.seekg(pos);
+                infile.seekg(lc.cmdsize, std::ios_base::cur);
                 break;
             }
             case LC_UUID: {
+                std::streampos pos = infile.tellg();
                 struct uuid_command stc;
                 infile.read(reinterpret_cast<char *>(&stc), sizeof(struct uuid_command));
                 printf("LC_UUID\n");
+                infile.seekg(pos);
+                infile.seekg(lc.cmdsize, std::ios_base::cur);
                 break;
             }
             case LC_SOURCE_VERSION: {
+                std::streampos pos = infile.tellg();
                 struct source_version_command svc;
                 infile.read(reinterpret_cast<char *>(&svc), sizeof(struct source_version_command));
                 printf("LC_SOURCE_VERSION\n");
+                infile.seekg(pos);
+                infile.seekg(lc.cmdsize, std::ios_base::cur);
                 break;
             }
             default: {
+                std::streampos pos = infile.tellg();
                 // 不支持的 cmd 应该怎么处理？
                 int64_t command;
                 infile.read(reinterpret_cast<char *>(&command), 16);
                 printf("lc.cmd = %x\n", lc.cmd);
+                infile.seekg(pos);
+                infile.seekg(lc.cmdsize, std::ios_base::cur);
                 break;
             }
         }
@@ -296,10 +331,14 @@ void MachOReader::printLoadCommandList() {
             struct prebound_dylib_command command;
             infile.read(reinterpret_cast<char *>(&command), sizeof(struct prebound_dylib_command));
             printf("LC_PREBOUND_DYLIB\n");
+            infile.seekg(pos);
+            infile.seekg(command.cmdsize, std::ios_base::cur);
         } else if (lc.cmd == LC_LAZY_LOAD_DYLIB) {
             struct dylib_command command;
             infile.read(reinterpret_cast<char *>(&command), sizeof(struct dylib_command));
             printf("LC_LAZY_LOAD_DYLIB\n");
+            infile.seekg(pos);
+            infile.seekg(command.cmdsize, std::ios_base::cur);
         }
     }
 }
