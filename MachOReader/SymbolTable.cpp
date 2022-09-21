@@ -42,7 +42,7 @@ void SymbolTable::printAllSymbols() {
     
     // 得到 nlist 数组
     struct nlist_64 *nlists = (struct nlist_64 *)malloc(sizeof(struct nlist_64) * command.nsyms);
-    std::cout << "\n共有 " << command.nsyms << " 个符号：" << std::endl;
+    std::cout << "\n共有 " << std::dec << command.nsyms << " 个符号：" << std::endl;
     
     for (int i = 0; i < command.nsyms; ++i) {
         struct nlist_64 nlist;
