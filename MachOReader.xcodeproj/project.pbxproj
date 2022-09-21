@@ -84,8 +84,8 @@
 				26E9C6D128D569F700E04CE8 /* CPUType.h */,
 				26E9C6D228D56B1600E04CE8 /* CPUSubtype.h */,
 				26E9C6D328D5706500E04CE8 /* FileType.h */,
-				26E9C6D428D5892200E04CE8 /* SwapEndian.h */,
 				26E9C6D528D5892300E04CE8 /* SwapEndian.cpp */,
+				26E9C6D428D5892200E04CE8 /* SwapEndian.h */,
 				864537F028C73BDF00C8E114 /* main.cpp */,
 			);
 			path = MachOReader;

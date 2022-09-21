@@ -17,9 +17,9 @@ int main(int argc, char *argv[]) {
     }
     
 //    path = "/Users/hj/Desktop/FishhookUse_device";
-//    path = "/Users/hj/Desktop/FishhookUse_simulator";
+    path = "/Users/hj/Desktop/FishhookUse_simulator";
 //    path = "/Users/hj/Desktop/FishhookUse_fat";
-    path = "/Users/hj/Desktop/MultiArchMacApp";
+//    path = "/Users/hj/Desktop/MultiArchMacApp";
     
     MachOReader::MachOReader reader(path);
     

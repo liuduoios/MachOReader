@@ -35,6 +35,7 @@ private:
 private:
     std::ifstream infile;
     struct mach_header_64 header;
+    uint32_t currentArchOffset;
     SymbolTable *symbolTable = nullptr;
 };
 

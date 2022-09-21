@@ -28,7 +28,8 @@ MachOReader::MachOReader(std::string filePath): filePath(filePath) {
     // 读取 magic
     uint32_t magic;
     infile.read(reinterpret_cast<char *>(&magic), sizeof(magic));
-    printf("magic: %x\n", magic);
+
+    std::cout << "magic: " << std::hex << magic << std::endl;
     Architecture architecture = Architecture(magic);
     std::cout << stringOfArchitecture(architecture) << std::endl;
     
@@ -65,6 +66,7 @@ void MachOReader::handleFatArch() {
                 swapFatArch(&arch);
             }
             
+            std::cout << "\n----- 第 " << i + 1 << " 个架构 -----" << std::endl;
             std::streampos pos = infile.tellg();
             CPUType cpuType = CPUType(arch.cputype);
             if (is64Arch(cpuType)) {
@@ -90,6 +92,7 @@ void MachOReader::handleFatArch() {
 }
 
 void MachOReader::handle32Arch(uint32_t offset) {
+    currentArchOffset = offset;
     infile.seekg(offset);
     
     struct mach_header header;
@@ -104,6 +107,7 @@ void MachOReader::printHeaderInfo(struct mach_header header) {
 }
 
 void MachOReader::handle64Arch(uint32_t offset) {
+    currentArchOffset = offset;
     infile.seekg(offset);
     
     struct mach_header_64 header;
@@ -172,8 +176,7 @@ void printLoadCommandType(struct load_command lc) {
 }
 
 void MachOReader::printLoadCommandList() {
-    std::cout << "\n-----------------------";
-    printf("\n共有 %d 个加载命令\n", header.ncmds);
+    printf("\n共有 %d 个加载命令：\n", header.ncmds);
     
 //    std::streampos loadCommandPos = infile.tellg();
     
@@ -204,8 +207,6 @@ void MachOReader::printLoadCommandList() {
                 struct segment_command_64 command;
                 infile.read(reinterpret_cast<char *>(&command), sizeof(struct segment_command_64));
                 printf("segment_command_64.segname = %s\n", command.segname);
-                infile.seekg(pos);
-                infile.seekg(lc.cmdsize, std::ios_base::cur);
                 
                 // 如果存在 section，则需要读取 section
                 for (int j = 0; j < command.nsects; ++j) {
@@ -213,6 +214,9 @@ void MachOReader::printLoadCommandList() {
                     infile.read(reinterpret_cast<char *>(&section), sizeof(struct section_64));
                     printf("\tsection: %s\n", section.sectname);
                 }
+                
+                infile.seekg(pos);
+                infile.seekg(lc.cmdsize, std::ios_base::cur);
                 break;
             }
             case LC_CODE_SIGNATURE:
@@ -226,7 +230,6 @@ void MachOReader::printLoadCommandList() {
                 std::streampos pos = infile.tellg();
                 struct linkedit_data_command command;
                 infile.read(reinterpret_cast<char *>(&command), sizeof(struct linkedit_data_command));
-                printf("linkedit_data_command\n");
                 infile.seekg(pos);
                 infile.seekg(command.cmdsize, std::ios_base::cur);
                 break;
@@ -238,7 +241,6 @@ void MachOReader::printLoadCommandList() {
                 struct dylinker_command command;
     //            printf("%lu", sizeof(struct dylinker_command));
                 infile.read(reinterpret_cast<char *>(&command), sizeof(struct dylinker_command)); // sizeof(struct dylinker_command) == 12
-                printf("LC_LOAD_DYLINKER\n");
                 infile.seekg(pos);
                 infile.seekg(command.cmdsize, std::ios_base::cur);
                 break;
@@ -250,7 +252,6 @@ void MachOReader::printLoadCommandList() {
                 std::streampos pos = infile.tellg();
                 struct dylib_command command;
                 infile.read(reinterpret_cast<char *>(&command), sizeof(struct dylib_command));
-                printf("LC_LOAD_DYLIB\n");
                 infile.seekg(pos);
                 infile.seekg(command.cmdsize, std::ios_base::cur);
                 break;
@@ -259,7 +260,6 @@ void MachOReader::printLoadCommandList() {
                 std::streampos pos = infile.tellg();
                 struct entry_point_command command;
                 infile.read(reinterpret_cast<char *>(&command), sizeof(struct entry_point_command));
-                printf("LC_MAIN\n");
                 infile.seekg(pos);
                 infile.seekg(command.cmdsize, std::ios_base::cur);
                 break;
@@ -269,7 +269,6 @@ void MachOReader::printLoadCommandList() {
                 std::streampos pos = infile.tellg();
                 struct dyld_info_command dic;
                 infile.read(reinterpret_cast<char *>(&dic), lc.cmdsize);
-                printf("LC_DYLD_INFO_ONLY\n");
                 infile.seekg(pos);
                 infile.seekg(lc.cmdsize, std::ios_base::cur);
                 break;
@@ -286,14 +285,13 @@ void MachOReader::printLoadCommandList() {
                 infile.seekg(pos);
                 infile.seekg(command.cmdsize, std::ios_base::cur);
                 
-                symbolTable = new SymbolTable(command, filePath);
+                symbolTable = new SymbolTable(currentArchOffset, command, filePath);
                 break;
             }
             case LC_DYSYMTAB: {
                 std::streampos pos = infile.tellg();
                 struct dysymtab_command stc;
                 infile.read(reinterpret_cast<char *>(&stc), lc.cmdsize);
-                printf("LC_DYSYMTAB\n");
                 infile.seekg(pos);
                 infile.seekg(lc.cmdsize, std::ios_base::cur);
                 break;
@@ -302,7 +300,6 @@ void MachOReader::printLoadCommandList() {
                 std::streampos pos = infile.tellg();
                 struct uuid_command stc;
                 infile.read(reinterpret_cast<char *>(&stc), sizeof(struct uuid_command));
-                printf("LC_UUID\n");
                 infile.seekg(pos);
                 infile.seekg(lc.cmdsize, std::ios_base::cur);
                 break;
@@ -311,7 +308,6 @@ void MachOReader::printLoadCommandList() {
                 std::streampos pos = infile.tellg();
                 struct source_version_command svc;
                 infile.read(reinterpret_cast<char *>(&svc), sizeof(struct source_version_command));
-                printf("LC_SOURCE_VERSION\n");
                 infile.seekg(pos);
                 infile.seekg(lc.cmdsize, std::ios_base::cur);
                 break;

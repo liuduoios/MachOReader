@@ -14,12 +14,13 @@
 namespace MachOReader {
 
 class SymbolTable {
+    uint32_t archOffset;
     struct symtab_command command;
     std::ifstream infile;
     std::streampos symbolTablePos;
     std::string filePath;
 public:
-    SymbolTable(struct symtab_command command, std::string filePath);
+    SymbolTable(uint32_t archOffset, struct symtab_command command, std::string filePath);
     ~SymbolTable();
     void printAllSymbols();
 };
